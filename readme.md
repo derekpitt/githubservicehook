@@ -22,6 +22,12 @@ func main() {
 }
 ```
 
+## install
+
+```
+go install github.com/derekpitt/githubservicehook
+```
+
 ## A little more detail
 
 - Holds an internal queue so it will process requests in the order recieved while keeping githubs hook processor happy. (runs your handler in a go routine and returns as fast as possible to github)
