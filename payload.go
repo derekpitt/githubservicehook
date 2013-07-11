@@ -12,6 +12,8 @@ type Payload struct {
 
 	Commits    []commit   `json:"commits"`
 	Repository repository `json:"repository"`
+
+	HeadCommit commit `json:"head_commit"`
 }
 
 type commit struct {
@@ -33,6 +35,20 @@ type repository struct {
 	Homepage    string `json:"homepage"`
 	Private     bool   `json:"private"`
 	Owner       person `json:"owner"`
+
+	Forks       int `json:"forks"`
+	Watchers    int `json:"watchers"`
+	Stars       int `json:"stargazers"`
+	SizeInBytes int `json:"size"`
+
+	HasDownloads bool `json:"has_downloads"`
+	HasIssues    bool `json:"has_issues"`
+	HasWiki      bool `json:"has_wiki"`
+
+	IsFork bool `json:"fork"`
+
+	Language     string `json:"language"`
+	MasterBranch string `json:"master_branch"`
 }
 
 type person struct {
