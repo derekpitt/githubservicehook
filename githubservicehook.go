@@ -60,7 +60,6 @@ func (this *hookProcess) processNextPayload() {
 	this.listMutex.Lock()
 	this.list.Remove(payload)
 	this.listMutex.Unlock()
-
 }
 
 // this will block
