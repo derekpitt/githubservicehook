@@ -1,8 +1,8 @@
 package githubservicehook
 
 import (
-  "time"
 	"encoding/json"
+	"time"
 )
 
 type Payload struct {
@@ -43,5 +43,5 @@ type person struct {
 
 func parsePayload(body []byte) (payload Payload, err error) {
 	err = json.Unmarshal(body, &payload)
-  return
+	return
 }
