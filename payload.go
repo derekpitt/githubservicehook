@@ -41,7 +41,7 @@ type person struct {
 	UserName string `json:"username"`
 }
 
-func parsePayload(body []byte) (payload Payload, err error) {
-	err = json.Unmarshal(body, &payload)
+func parsePayload(body string) (payload Payload, err error) {
+	err = json.Unmarshal([]byte(body), &payload)
 	return
 }

@@ -2,7 +2,6 @@ package githubservicehook
 
 import (
 	"container/list"
-	"io/ioutil"
 	"net/http"
 	"sync"
 )
@@ -25,7 +24,13 @@ func (this *hookProcess) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, _ := ioutil.ReadAll(r.Body)
+	err := r.ParseForm()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	body := r.FormValue("payload")
 	payload, err := parsePayload(body)
 
 	if err != nil {
