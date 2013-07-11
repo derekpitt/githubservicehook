@@ -7,13 +7,13 @@ import (
 	"sync"
 )
 
-type PayloadProcessor func(Payload)
+type payloadProcessor func(Payload)
 
 type hookProcess struct {
 	list         *list.List
 	listMutex    sync.RWMutex
 	processMutex sync.Mutex
-	processor    PayloadProcessor
+	processor    payloadProcessor
 	addr         string
 
 	server *http.Server
@@ -72,7 +72,7 @@ func (this *hookProcess) Start() error {
 	return this.server.ListenAndServe()
 }
 
-func New(addr string, f PayloadProcessor) *hookProcess {
+func New(addr string, f payloadProcessor) *hookProcess {
 	return &hookProcess{
 		list:         list.New(),
 		listMutex:    sync.RWMutex{},
