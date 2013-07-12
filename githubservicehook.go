@@ -1,7 +1,6 @@
 package githubservicehook
 
 import (
-	"container/list"
 	"net/http"
 	"sync"
 )
@@ -9,8 +8,6 @@ import (
 type payloadProcessor func(Payload)
 
 type hookProcess struct {
-	list         *list.List
-	listMutex    sync.RWMutex
 	processMutex sync.Mutex
 	processor    payloadProcessor
 	addr         string
@@ -38,33 +35,15 @@ func (this *hookProcess) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.listMutex.Lock()
-	this.list.PushBack(payload)
-	this.listMutex.Unlock()
-
-	go this.processNextPayload()
+	go this.processNextPayload(payload)
 }
 
-func (this *hookProcess) processNextPayload() {
+func (this *hookProcess) processNextPayload(payload Payload) {
 	this.processMutex.Lock()
 	defer this.processMutex.Unlock()
 
-	// grab the front element
-	this.listMutex.RLock()
-	payload := this.list.Front()
-	this.listMutex.RUnlock()
-
-	if payload == nil {
-		return
-	}
-
 	// do the thing
-	this.processor(payload.Value.(Payload))
-
-	// remove the payload
-	this.listMutex.Lock()
-	this.list.Remove(payload)
-	this.listMutex.Unlock()
+	this.processor(payload)
 }
 
 // this will block
@@ -79,8 +58,6 @@ func (this *hookProcess) Start() error {
 
 func New(addr string, f payloadProcessor) *hookProcess {
 	return &hookProcess{
-		list:         list.New(),
-		listMutex:    sync.RWMutex{},
 		processMutex: sync.Mutex{},
 		processor:    f,
 		addr:         addr,
