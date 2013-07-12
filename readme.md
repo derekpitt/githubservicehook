@@ -12,13 +12,13 @@ import (
 )
 
 func main() {
-  processor := githubservicehook.New(":8080", func(p githubservicehook.Payload) {
+  processor := githubservicehook.New(func(p githubservicehook.Payload) {
     log.Println("starting: ", p.Repository.Name)
     time.Sleep(1 * time.Second)
     log.Println("done...")
   })
 
-  log.Fatal(processor.Start())
+  log.Fatal(processor.Start(":8080"))
 }
 ```
 

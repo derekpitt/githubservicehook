@@ -10,9 +10,7 @@ type payloadProcessor func(Payload)
 type hookProcess struct {
 	processMutex sync.Mutex
 	processor    payloadProcessor
-	addr         string
-
-	server *http.Server
+	server       *http.Server
 }
 
 func (this *hookProcess) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -47,19 +45,18 @@ func (this *hookProcess) processNextPayload(payload Payload) {
 }
 
 // this will block
-func (this *hookProcess) Start() error {
+func (this *hookProcess) Start(addr string) error {
 	this.server = &http.Server{
-		Addr:    this.addr,
+		Addr:    addr,
 		Handler: this,
 	}
 
 	return this.server.ListenAndServe()
 }
 
-func New(addr string, f payloadProcessor) *hookProcess {
+func New(f payloadProcessor) *hookProcess {
 	return &hookProcess{
 		processMutex: sync.Mutex{},
 		processor:    f,
-		addr:         addr,
 	}
 }
